@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBCONFIG REQUIRED libconfig++)
+
 include(ExternalProject)
 set(LIBTORCH_INSTALL_DIR "${CMAKE_BINARY_DIR}/libtorch_sdk")
 set(TORCH_URL "https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.2%2Bcpu.zip")
@@ -28,13 +31,21 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/engine/Engine.cpp
     src/engine/Eval.cpp
+    src/parser/Parser.cpp
 )
-target_include_directories(${PROJECT_NAME} PRIVATE ${TORCH_INCLUDE_DIRS} include)
-target_link_directories(${PROJECT_NAME} PRIVATE ${TORCH_LIB_DIR} include)
+target_compile_options(${PROJECT_NAME} PRIVATE 
+    -Wall
+    -Werror
+    -Ofast
+    -flto
+)
+target_include_directories(${PROJECT_NAME} PRIVATE ${TORCH_INCLUDE_DIRS} ${LIBCONFIG_INCLUDE_DIRS} include)
+target_link_directories(${PROJECT_NAME} PRIVATE ${TORCH_LIB_DIR} )
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     ${TORCH_LIB_DIR}/libtorch.so 
     ${TORCH_LIB_DIR}/libtorch_cpu.so 
     ${TORCH_LIB_DIR}/libc10.so
+    ${LIBCONFIG_LIBRARIES}
 )
 add_dependencies(${PROJECT_NAME} libtorch_external)
 set_target_properties(${PROJECT_NAME} PROPERTIES 

@@ -1,13 +1,14 @@
 #include "Engine.hpp"
 #include "Eval.hpp"
+#include "constants.hpp"
 
-Engine::Engine(const std::string& modelPath, std::string& fen)
+Engine::Engine(const std::string& modelPath, std::string& fen, bool enginePlayer)
 {
     try {
+        this->_enginePlayer = enginePlayer;
         this->_fen = fen;
         this->_model = torch::jit::load(modelPath);
         this->_model.eval();
-        std::cout << "Model loaded successfully." << std::endl;
     }
     catch (const c10::Error& e) {
         throw EngineException("Failed to load model.");
@@ -23,6 +24,6 @@ float Engine::evaluate_board()
         return score;
     } catch (const EvalException& e) {
         std::cerr << e.what() << std::endl;
-        return -1;
+        return ERROR;
     }
 }

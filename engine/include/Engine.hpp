@@ -6,9 +6,10 @@
 class Engine {
     torch::jit::script::Module _model;
     std::string _fen;
+    bool _enginePlayer;
 
     public:
-        Engine(const std::string& modelPath, std::string& fen);
+        Engine(const std::string& modelPath, std::string& fen, bool enginePlayer);
         ~Engine() = default;
 
         float evaluate_board();

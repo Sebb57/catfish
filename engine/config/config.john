@@ -1,0 +1,5 @@
+settings = {
+    fen = "rnbqkb1r/pppn1ppp/4p3/3pP3/3P4/8/PPPN1PPP/R1BQKBNR w KQkq - 1 5";
+    enginePlayer = "W";
+    modelPath = "../model/johnBordello.pt";
+};
