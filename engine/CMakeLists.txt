@@ -3,6 +3,7 @@ project(john LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(ExternalProject)
 set(LIBTORCH_INSTALL_DIR "${CMAKE_BINARY_DIR}/libtorch_sdk")
@@ -25,9 +26,11 @@ set(TORCH_LIB_DIR "${LIBTORCH_INSTALL_DIR}/lib")
 
 add_executable(${PROJECT_NAME} 
     src/main.cpp
+    src/engine/Engine.cpp
+    src/engine/Eval.cpp
 )
-target_include_directories(${PROJECT_NAME} PRIVATE ${TORCH_INCLUDE_DIRS})
-target_link_directories(${PROJECT_NAME} PRIVATE ${TORCH_LIB_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${TORCH_INCLUDE_DIRS} include)
+target_link_directories(${PROJECT_NAME} PRIVATE ${TORCH_LIB_DIR} include)
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     ${TORCH_LIB_DIR}/libtorch.so 
     ${TORCH_LIB_DIR}/libtorch_cpu.so 
