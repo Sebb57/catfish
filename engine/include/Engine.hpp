@@ -2,17 +2,21 @@
     #define ENGINE_HPP_
 
 #include <torch/script.h>
+#include <vector>
+#include "Move.hpp"
 
 class Engine {
     torch::jit::script::Module _model;
     std::string _fen;
     bool _enginePlayer;
+    std::vector<Move> _moves;
 
     public:
         Engine(const std::string& modelPath, std::string& fen, bool enginePlayer);
         ~Engine() = default;
 
-        float evaluate_board();
+        void predictMove();
+        float evaluateBoard();
 };
 
 class EngineException : public std::exception {

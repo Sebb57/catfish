@@ -1,6 +1,7 @@
 #include "Engine.hpp"
 #include "Eval.hpp"
 #include "constants.hpp"
+#include <cfloat>
 
 Engine::Engine(const std::string& modelPath, std::string& fen, bool enginePlayer)
 {
@@ -15,7 +16,7 @@ Engine::Engine(const std::string& modelPath, std::string& fen, bool enginePlayer
     }
 }
 
-float Engine::evaluate_board()
+float Engine::evaluateBoard()
 {
     try {
         float score = Eval::evaluate_board(this->_model, this->_fen);
@@ -26,4 +27,22 @@ float Engine::evaluate_board()
         std::cerr << e.what() << std::endl;
         return ERROR;
     }
+}
+
+void Engine::predictMove()
+{
+    Move bestMove;
+    double bestScore = -DBL_MAX;
+    
+    for (Move move : this->_moves) { //optimize later
+        // make_move(move)
+        double score = -negamax(depth - 1, -inf, +inf);
+        // undo_move(move)
+        //
+        if (score > bestScore) {
+            bestScore = score;
+            bestMove = move;
+        }
+    }
+    std::cout << "Best move: " << bestMove << std::endl;
 }
